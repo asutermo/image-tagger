@@ -43,4 +43,8 @@ All images were source from Wikimedia commons.
 
 ## Tests
 
-Run tox from the root
+Run the following from the root
+
+```sh
+tox
+```
