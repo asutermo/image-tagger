@@ -1,10 +1,13 @@
 import argparse
+from dataclasses import dataclass
+import json
 import logging
 import os
 from typing import List
 from urllib.parse import urlparse
 
 from dotenv import dotenv_values
+from pydantic import BaseModel
 
 from tag.groq_client import GroqTaggingClient
 from utils.image_utils import encode_image, is_image
@@ -15,6 +18,10 @@ logger = logging.getLogger(__name__)
 
 config = dotenv_values(".env")
 
+@dataclass
+class Tags(BaseModel):
+    tags: List[str]
+    categories: List[str]
 
 def is_url(path: str) -> bool:
     print(urlparse(path).scheme)
@@ -30,7 +37,6 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
     # build up request
     image_messages = []
     for path in inputs:
-        logger.info(path)
         if is_url(path):
             image_messages.append(path)
         else:
@@ -48,9 +54,10 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                 image_messages.append(encode_image(path))
 
     # send request
-    logger.debug(image_messages)
+    logger.debug(f'Inputs: {image_messages}')
     response = client.message(custom_prompt, image_messages)
-    logger.info(response)
+    logger.info(f'Response: {response}')
+
 
 
 if __name__ == "__main__":
@@ -78,7 +85,7 @@ if __name__ == "__main__":
         "--custom-prompt",
         help="Custom prompt to use. This is useful if you want to override how to prompt Groq",
         required=False,
-        default='You will be tagging the attached image similar to WD14 (1-2 word tags). You can supply as many tags as you like. This should not be a paragraph or sentence. It must be in json following this format {"tags": ["tag1", "tag2", ...], "categories": ["category1"]} and nothing else.',
+        default=f'You will be tagging the attached image similar to WD14 (1-2 word tags). You can supply as many tags as you like. This should not be a paragraph or sentence. The JSON object must use the schema: {json.dumps(Tags.model_json_schema(), indent=2)} and nothing else.',
     )
 
     parser.add_argument(

@@ -1,13 +1,17 @@
+from dataclasses import dataclass
+import json
 import logging
 from typing import List
 
 from groq import Groq
+
 from utils.log_utils import config_logs # type: ignore
 
 config_logs()
 logger = logging.getLogger(__name__)
 
 __all__ = ["GroqTaggingClient"]
+
 
 
 class GroqTaggingClient:
@@ -17,7 +21,8 @@ class GroqTaggingClient:
         self.client = Groq(api_key=api_key.replace('"', "").replace("'", ""))
         self.model = model
 
-    def message(self, caption_request: str, image_urls: List[str]) -> str:
+
+    def message(self, caption_request: str, image_url: str) -> str:
         messages = [
             {
                 "role": "user",
@@ -29,10 +34,8 @@ class GroqTaggingClient:
                     },
                 ],
             }
-            for image_url in image_urls
         ]
 
-        logger.debug(messages)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
@@ -42,5 +45,5 @@ class GroqTaggingClient:
             stream=False,
             stop=None,
         )
-        logger.info(response.choices[0].message.content)
+        logger.info(response)
         return response.choices[0].message.content
