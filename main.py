@@ -35,10 +35,10 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
     client = GroqTaggingClient(api_key=config["GROQ_API_KEY"], model=model)
 
     # build up request
-    image_messages = []
+    out_json = {}
     for path in inputs:
         if is_url(path):
-            image_messages.append(path)
+            out_json[path] = client.message(custom_prompt, path)
         else:
             if os.path.isdir(path):
                 for file in os.listdir(path):
@@ -46,18 +46,16 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                     if not is_image(file_path):
                         logger.error(f"{file_path} is not an image")
                         continue
-                    image_messages.append(f"data:image/jpeg;base64,{encode_image(file_path)}")
+                    out_json[file_path] = client.message(custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
             else:
                 if not is_image(path):
                     logger.error(f"{path} is not an image")
                     continue
-                image_messages.append(encode_image(path))
+                out_json[path] = client.message(custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
 
-    # send request
-    logger.debug(f'Inputs: {image_messages}')
-    response = client.message(custom_prompt, image_messages)
-    logger.info(f'Response: {response}')
-
+    logger.info(f'Output: {out_json}')
+    with open(output, "w") as f:
+        json.dump(out_json, f, indent=2)
 
 
 if __name__ == "__main__":
@@ -85,7 +83,7 @@ if __name__ == "__main__":
         "--custom-prompt",
         help="Custom prompt to use. This is useful if you want to override how to prompt Groq",
         required=False,
-        default=f'You will be tagging the attached image similar to WD14 (1-2 word tags). You can supply as many tags as you like. This should not be a paragraph or sentence. The JSON object must use the schema: {json.dumps(Tags.model_json_schema(), indent=2)} and nothing else.',
+        default=f'You will be tagging the attached image using 1-2 words per tag. You can supply as many tags as you like. This should not be a paragraph or sentence. The JSON object must use the schema: {json.dumps(Tags.model_json_schema(), indent=2)} and nothing else. What is in the image?',
     )
 
     parser.add_argument(

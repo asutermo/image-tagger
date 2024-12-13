@@ -43,7 +43,7 @@ class GroqTaggingClient:
             top_p=1,
             max_tokens=1024,
             stream=False,
+            response_format={"type": "json_object"},
             stop=None,
         )
-        logger.info(response)
-        return response.choices[0].message.content
+        return response.choices[0].message.content.replace("\n", " ")
