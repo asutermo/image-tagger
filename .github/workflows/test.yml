@@ -29,4 +29,6 @@ jobs:
         conda env create -f environment.yaml || conda env update -f environment.yaml --prune
   
     - name: Run Tests with tox
-      run: tox
+      run: |
+        conda activate image-tagger
+        tox
