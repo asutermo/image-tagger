@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import List
 from urllib.parse import urlparse
 
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 from pydantic import BaseModel  # type: ignore
 
 from tag.groq_client import GroqTaggingClient
@@ -16,7 +16,7 @@ from utils.log_utils import config_logs
 config_logs()
 logger = logging.getLogger(__name__)
 
-config = dotenv_values(".env")
+config = load_dotenv()
 
 
 @dataclass
@@ -45,7 +45,7 @@ def prompt_groq(client: GroqTaggingClient, custom_prompt: str, image_url: str) -
 
 
 def process_images(inputs: List[str], output: str, custom_prompt: str, model: str):
-    api_key = config.get("GROQ_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         raise ValueError("GROQ_API_KEY is not set in the .env file")
 

@@ -11,6 +11,7 @@ from utils.image_utils import encode_image, is_image
 TEST_IMAGE_PATH = "tests/images/800px-Another_Day_in_NYC_(2539547867).jpg"
 TEST_IMAGE_DIR = "tests/images/"
 TEST_OUTPUT_PATH = "tests/output.json"
+INVALID_IMAGE_PATH = "tests/images/non_existent_image.jpg"
 
 
 # Mock image utility functions
@@ -25,7 +26,7 @@ def test_is_image():
 def test_encode_image():
     with patch("builtins.open", mock_open(read_data=b"fake_image_data")):
         result = encode_image(TEST_IMAGE_PATH)
-        assert result == "ZmFrZV9pbWFnZV9kYXRh"  # base64 for "fake_image_data"
+        assert result == "ZmFrZV9pbWFnZV9kYXRh"
 
 
 # Mock process_images function
@@ -82,6 +83,30 @@ def test_process_images_with_real_images():
 
     # Clean up
     os.remove(TEST_OUTPUT_PATH)
+
+
+def test_process_images_missing_api_key():
+    custom_prompt = "Missing API Key Test"
+    model = "test-model"
+
+    # Temporarily unset the API key
+    with patch.dict("os.environ", {"GROQ_API_KEY": ""}):
+        with pytest.raises(
+            ValueError, match="GROQ_API_KEY is not set in the .env file"
+        ):
+            process_images([TEST_IMAGE_PATH], TEST_OUTPUT_PATH, custom_prompt, model)
+
+
+def test_process_images_invalid_image_path():
+    custom_prompt = "Invalid Image Path Test"
+    model = "test-model"
+
+    # Ensure output file is removed before the test
+    if os.path.exists(TEST_OUTPUT_PATH):
+        os.remove(TEST_OUTPUT_PATH)
+
+    with pytest.raises(FileNotFoundError):
+        process_images([INVALID_IMAGE_PATH], TEST_OUTPUT_PATH, custom_prompt, model)
 
 
 # Run the tests
