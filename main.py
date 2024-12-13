@@ -8,7 +8,9 @@ from dotenv import dotenv_values
 
 from tag.groq_client import GroqTaggingClient
 from utils.image_utils import encode_image, is_image
+from utils.log_utils import config_logs
 
+config_logs()
 logger = logging.getLogger(__name__)
 
 config = dotenv_values(".env")
@@ -28,7 +30,7 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
     # build up request
     image_messages = []
     for path in inputs:
-        print(path)
+        logger.info(path)
         if is_url(path):
             image_messages.append(path)
         else:
@@ -46,9 +48,9 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                 image_messages.append(encode_image(path))
 
     # send request
-    print(image_messages)
+    logger.debug(image_messages)
     response = client.message(custom_prompt, image_messages)
-    print(response)
+    logger.info(response)
 
 
 if __name__ == "__main__":

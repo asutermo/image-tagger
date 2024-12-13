@@ -1,8 +1,10 @@
 import logging
 from typing import List
 
-from groq import Groq # type: ignore
+from groq import Groq
+from utils.log_utils import config_logs # type: ignore
 
+config_logs()
 logger = logging.getLogger(__name__)
 
 __all__ = ["GroqTaggingClient"]

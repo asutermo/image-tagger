@@ -1,1 +1,1 @@
-__all__ = ["image_utils"]
+__all__ = ["image_utils", "log_utils"]
