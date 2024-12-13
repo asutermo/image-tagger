@@ -2,10 +2,14 @@ import argparse
 import logging
 
 from dotenv import dotenv_values
+from groq.groq_client import GroqTaggingClient
 
 logger = logging.getLogger(__name__)
 
 config = dotenv_values(".env")
+
+def process_images():
+    client = GroqTaggingClient(api_key=config["API_KEY"])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
