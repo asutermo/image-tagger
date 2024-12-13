@@ -30,6 +30,12 @@ def is_url(path: str) -> bool:
         "https",
     )
 
+def prompt_groq(client: GroqTaggingClient, custom_prompt: str, image_url: str) -> str:
+    try:
+        return client.message(custom_prompt, image_url)
+    except Exception as e:
+        logger.error(f"Error processing {image_url}: {e}. Check https://console.groq.com/docs/vision for reasons why this may occur")
+        return {"error": f"Error. Check https://console.groq.com/docs/vision for reasons why this may occur"}
 
 def process_images(inputs: List[str], output: str, custom_prompt: str, model: str):
     client = GroqTaggingClient(api_key=config["GROQ_API_KEY"], model=model)
@@ -38,7 +44,7 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
     out_json = {}
     for path in inputs:
         if is_url(path):
-            out_json[path] = client.message(custom_prompt, path)
+            out_json[path] = prompt_groq(client, custom_prompt, path)
         else:
             if os.path.isdir(path):
                 for file in os.listdir(path):
@@ -46,12 +52,12 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                     if not is_image(file_path):
                         logger.error(f"{file_path} is not an image")
                         continue
-                    out_json[file_path] = client.message(custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
+                    out_json[file_path] = prompt_groq(client, custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
             else:
                 if not is_image(path):
                     logger.error(f"{path} is not an image")
                     continue
-                out_json[path] = client.message(custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
+                out_json[path] = prompt_groq(client,custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
 
     logger.info(f'Output: {out_json}')
     with open(output, "w") as f:

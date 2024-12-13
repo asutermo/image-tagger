@@ -33,7 +33,7 @@ class GroqTaggingClient:
                         "image_url": {"url": image_url, "detail": "high"},
                     },
                 ],
-            }
+            },
         ]
 
         response = self.client.chat.completions.create(
