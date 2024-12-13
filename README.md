@@ -10,3 +10,4 @@ Create a .env file in the root of the repository like so, replacing the XXXXX wi
 ```env
 GROQ_API_KEY=XXXXX
 ```
+

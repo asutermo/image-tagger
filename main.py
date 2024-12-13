@@ -1,6 +1,9 @@
 import argparse
+import logging
 
 from dotenv import dotenv_values
+
+logger = logging.getLogger(__name__)
 
 config = dotenv_values(".env")
 
@@ -26,3 +29,12 @@ if __name__ == "__main__":
         help="Custom prompt to use. This is useful if you want to override how to prompt Groq",
         required=False,
     )
+
+    parser.add_argument(
+        "-m",
+        "--model",
+        help="Model to use. Please note that only certain models are capable of handling images",
+        required=False,
+    )
+
+    args = parser.parse_args()

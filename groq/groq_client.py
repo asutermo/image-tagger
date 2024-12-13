@@ -1,10 +1,14 @@
 import logging
+
 from groq import Groq  # type: ignore
 
 logger = logging.getLogger(__name__)
 
-class GroqTaggingClient():
-    def __init__(self, api_key: str, model: str = "llama-3.2-11b-vision-preview") -> None:
+
+class GroqTaggingClient:
+    def __init__(
+        self, api_key: str, model: str = "llama-3.2-11b-vision-preview"
+    ) -> None:
         self.client = Groq(api_key=api_key.replace('"', "").replace("'", ""))
         self.model = model
 
