@@ -75,7 +75,7 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                 out_json[path] = prompt_groq(
                     client,
                     custom_prompt,
-                    f"data:image/jpeg;base64,{encode_image(file_path)}",
+                    f"data:image/jpeg;base64,{encode_image(path)}",
                 )
 
     logger.info(f"Output: {out_json}")

@@ -18,3 +18,20 @@ Create a .env file in the root of the repository like so, replacing the XXXXX wi
 GROQ_API_KEY=XXXXX
 ```
 
+## Usage
+
+Please note that this is not perfect. Groq sometimes returns invalid data.
+
+
+```sh
+python main.py -i "./tests/images/800px-Another_Day_in_NYC_(2539547867).jpg" "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg/800px-Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg?20071010223618"
+```
+
+```sh
+python main.py -i ./tests/images
+```
+
+## Images
+
+All images were source from Wikimedia commons.
+
