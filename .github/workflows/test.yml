@@ -20,15 +20,15 @@ jobs:
     - name: Install Miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
-        python-version: 3.11
-        auto-update-conda: true
+        miniconda-version: 'latest'
         channels: conda-forge
+        mamba-version: "*"
+        channel-priority: true
+        auto-update-conda: false
+        auto-activate-base: false
+        environment-file: environment.yaml
+        activate-environment: image-tagger
 
-    - name: Create Conda environment
-      run: |
-        conda env create -f environment.yaml || conda env update -f environment.yaml --prune
-  
     - name: Run Tests with tox
       run: |
-        conda activate image-tagger
         tox
