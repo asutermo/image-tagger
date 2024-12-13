@@ -33,9 +33,44 @@ Please note that this is not perfect. Groq sometimes returns invalid data.
 python main.py -i "./tests/images/800px-Another_Day_in_NYC_(2539547867).jpg" "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg/800px-Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg?20071010223618"
 ```
 
+Example (output.json)
+
+```json
+{
+  "./tests/images/800px-Another_Day_in_NYC_(2539547867).jpg": {
+    "tags": [
+      "Flowers",
+      "Nature",
+      "Pink",
+      "Potted",
+      "Green",
+      "Plant"
+    ],
+    "categories": [
+      "Gardening",
+      "Flowers"
+    ]
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg/800px-Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg?20071010223618": {
+    "tags": [
+      "fountain",
+      "art",
+      "sculpture",
+      "relax",
+      "vietnam"
+    ],
+    "categories": [
+      "Museum",
+      "Culture"
+    ]
+  }
+}
+```
+
 ```sh
 python main.py -i ./tests/images
 ```
+
 
 ## Images
 
