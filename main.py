@@ -22,7 +22,7 @@ def is_url(path: str) -> bool:
 
 
 def process_images(inputs: List[str], output: str, custom_prompt: str, model: str):
-    client = GroqTaggingClient(api_key=config["API_KEY"], model=model)
+    client = GroqTaggingClient(api_key=config["GROQ_API_KEY"], model=model)
 
     # build up request
     image_messages = []
