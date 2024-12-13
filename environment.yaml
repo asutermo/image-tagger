@@ -1,0 +1,10 @@
+name: image-tagger
+channels: 
+  - conda-forge
+dependencies:
+  - python=3.11.10
+  - git
+  - anaconda
+  - pip
+  - pip:
+    - -r requirements.txt
