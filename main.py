@@ -15,6 +15,7 @@ config = dotenv_values(".env")
 
 
 def is_url(path: str) -> bool:
+    print(urlparse(path).scheme)
     return urlparse(path).scheme in (
         "http",
         "https",
@@ -27,6 +28,7 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
     # build up request
     image_messages = []
     for path in inputs:
+        print(path)
         if is_url(path):
             image_messages.append(path)
         else:
@@ -36,7 +38,7 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                     if not is_image(file_path):
                         logger.error(f"{file_path} is not an image")
                         continue
-                    image_messages.append(encode_image(file_path))
+                    image_messages.append(f"data:image/jpeg;base64,{encode_image(file_path)}")
             else:
                 if not is_image(path):
                     logger.error(f"{path} is not an image")
@@ -44,7 +46,9 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                 image_messages.append(encode_image(path))
 
     # send request
-    client.message(custom_prompt, image_messages)
+    print(image_messages)
+    response = client.message(custom_prompt, image_messages)
+    print(response)
 
 
 if __name__ == "__main__":

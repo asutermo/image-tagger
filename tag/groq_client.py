@@ -29,6 +29,8 @@ class GroqTaggingClient:
             }
             for image_url in image_urls
         ]
+
+        logger.debug(messages)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
