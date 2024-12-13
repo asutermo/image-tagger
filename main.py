@@ -1,13 +1,13 @@
 import argparse
-from dataclasses import dataclass
 import json
 import logging
 import os
+from dataclasses import dataclass
 from typing import List
 from urllib.parse import urlparse
 
 from dotenv import dotenv_values
-from pydantic import BaseModel
+from pydantic import BaseModel  # type: ignore
 
 from tag.groq_client import GroqTaggingClient
 from utils.image_utils import encode_image, is_image
@@ -18,10 +18,12 @@ logger = logging.getLogger(__name__)
 
 config = dotenv_values(".env")
 
+
 @dataclass
 class Tags(BaseModel):
     tags: List[str]
     categories: List[str]
+
 
 def is_url(path: str) -> bool:
     print(urlparse(path).scheme)
@@ -30,17 +32,22 @@ def is_url(path: str) -> bool:
         "https",
     )
 
-def prompt_groq(client: GroqTaggingClient, custom_prompt: str, image_url: str) -> str:
+
+def prompt_groq(client: GroqTaggingClient, custom_prompt: str, image_url: str) -> dict:
     try:
-        return client.message(custom_prompt, image_url)
+        return json.loads(client.message(custom_prompt, image_url))
     except Exception as e:
-        logger.error(f"Error processing {image_url}: {e}. Check https://console.groq.com/docs/vision for reasons why this may occur")
-        return {"error": f"Error. Check https://console.groq.com/docs/vision for reasons why this may occur"}
+        logger.error(
+            f"Error processing {image_url}: {e}. Check https://console.groq.com/docs/vision for reasons why this may occur"
+        )
+        return {
+            "error": f"Error. Check https://console.groq.com/docs/vision for reasons why this may occur"
+        }
+
 
 def process_images(inputs: List[str], output: str, custom_prompt: str, model: str):
     client = GroqTaggingClient(api_key=config["GROQ_API_KEY"], model=model)
 
-    # build up request
     out_json = {}
     for path in inputs:
         if is_url(path):
@@ -52,14 +59,22 @@ def process_images(inputs: List[str], output: str, custom_prompt: str, model: st
                     if not is_image(file_path):
                         logger.error(f"{file_path} is not an image")
                         continue
-                    out_json[file_path] = prompt_groq(client, custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
+                    out_json[file_path] = prompt_groq(
+                        client,
+                        custom_prompt,
+                        f"data:image/jpeg;base64,{encode_image(file_path)}",
+                    )
             else:
                 if not is_image(path):
                     logger.error(f"{path} is not an image")
                     continue
-                out_json[path] = prompt_groq(client,custom_prompt, f"data:image/jpeg;base64,{encode_image(file_path)}")
+                out_json[path] = prompt_groq(
+                    client,
+                    custom_prompt,
+                    f"data:image/jpeg;base64,{encode_image(file_path)}",
+                )
 
-    logger.info(f'Output: {out_json}')
+    logger.info(f"Output: {out_json}")
     with open(output, "w") as f:
         json.dump(out_json, f, indent=2)
 
@@ -89,7 +104,7 @@ if __name__ == "__main__":
         "--custom-prompt",
         help="Custom prompt to use. This is useful if you want to override how to prompt Groq",
         required=False,
-        default=f'You will be tagging the attached image using 1-2 words per tag. You can supply as many tags as you like. This should not be a paragraph or sentence. The JSON object must use the schema: {json.dumps(Tags.model_json_schema(), indent=2)} and nothing else. What is in the image?',
+        default=f"You will be tagging the attached image using 1-2 words per tag. You can supply as many tags as you like. Please add 1 or 2 categories as well. This should not be a paragraph or sentence. The JSON object must use the schema: {json.dumps(Tags.model_json_schema(), indent=2)} and nothing else. What is in the image?",
     )
 
     parser.add_argument(

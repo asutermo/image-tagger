@@ -1,17 +1,13 @@
-from dataclasses import dataclass
-import json
 import logging
-from typing import List
 
-from groq import Groq
+from groq import Groq  # type: ignore
 
-from utils.log_utils import config_logs # type: ignore
+from utils.log_utils import config_logs  # type: ignore
 
 config_logs()
 logger = logging.getLogger(__name__)
 
 __all__ = ["GroqTaggingClient"]
-
 
 
 class GroqTaggingClient:
@@ -20,7 +16,6 @@ class GroqTaggingClient:
     ) -> None:
         self.client = Groq(api_key=api_key.replace('"', "").replace("'", ""))
         self.model = model
-
 
     def message(self, caption_request: str, image_url: str) -> str:
         messages = [
