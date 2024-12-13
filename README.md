@@ -18,6 +18,12 @@ Create a .env file in the root of the repository like so, replacing the XXXXX wi
 GROQ_API_KEY=XXXXX
 ```
 
+Run the following from the root of the repository to get a functional conda environment.
+
+```sh
+conda env create -f environment.yaml
+```
+
 ## Usage
 
 Please note that this is not perfect. Groq sometimes returns invalid data.
@@ -35,3 +41,6 @@ python main.py -i ./tests/images
 
 All images were source from Wikimedia commons.
 
+## Tests
+
+Run tox from the root

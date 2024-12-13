@@ -26,7 +26,6 @@ class Tags(BaseModel):
 
 
 def is_url(path: str) -> bool:
-    print(urlparse(path).scheme)
     return urlparse(path).scheme in (
         "http",
         "https",
@@ -41,7 +40,7 @@ def prompt_groq(client: GroqTaggingClient, custom_prompt: str, image_url: str) -
             f"Error processing {image_url}: {e}. Check https://console.groq.com/docs/vision for reasons why this may occur"
         )
         return {
-            "error": f"Error. Check https://console.groq.com/docs/vision for reasons why this may occur"
+            "error": "Error. Check https://console.groq.com/docs/vision for reasons why this may occur"
         }
 
 

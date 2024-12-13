@@ -1,0 +1,35 @@
+{
+  "./tests/images/800px-Another_Day_in_NYC_(2539547867).jpg": {
+    "tags": [
+      "plants",
+      "flowers",
+      "container",
+      "pink",
+      "green",
+      "leaves",
+      "foliage",
+      "sprouts",
+      "branch"
+    ],
+    "categories": [
+      "Gardening",
+      "Nature"
+    ]
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg/800px-Interior_Galeria_Arte_Nacional_%28Caracas%29.jpg?20071010223618": {
+    "tags": [
+      "art",
+      "museum",
+      "garden",
+      "statues",
+      "water",
+      "sculpture",
+      "sculptures",
+      "green"
+    ],
+    "categories": [
+      "Culture",
+      "Outdoors"
+    ]
+  }
+}
