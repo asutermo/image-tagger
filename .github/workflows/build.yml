@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request: 
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: 3.11
+        auto-update-conda: true
+        channels: conda-forge
+
+    - name: Create Conda environment
+      run: |
+        conda env create -f environment.yml || conda env update -f environment.yml --prune
+  
+    - name: Run Tests with tox
+      run: tox
