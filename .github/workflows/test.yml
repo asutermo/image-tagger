@@ -26,7 +26,7 @@ jobs:
 
     - name: Create Conda environment
       run: |
-        conda env create -f environment.yml || conda env update -f environment.yml --prune
+        conda env create -f environment.yaml || conda env update -f environment.yaml --prune
   
     - name: Run Tests with tox
       run: tox
