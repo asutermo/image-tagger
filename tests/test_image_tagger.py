@@ -8,7 +8,7 @@ from main import process_images
 from utils.image_utils import encode_image, is_image
 
 # Test data setup
-TEST_IMAGE_PATH = "tests/images/test_image.jpg"
+TEST_IMAGE_PATH = "tests/images/800px-Another_Day_in_NYC_(2539547867).jpg"
 TEST_IMAGE_DIR = "tests/images/"
 TEST_OUTPUT_PATH = "tests/output.json"
 
