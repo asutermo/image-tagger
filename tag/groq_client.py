@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from groq import Groq  # type: ignore
+from groq import Groq # type: ignore
 
 logger = logging.getLogger(__name__)
 

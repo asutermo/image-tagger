@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 from dotenv import dotenv_values
 
-from groq.groq_client import GroqTaggingClient
+from tag.groq_client import GroqTaggingClient
 from utils.image_utils import encode_image, is_image
 
 logger = logging.getLogger(__name__)
