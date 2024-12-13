@@ -60,7 +60,7 @@ def test_process_images_with_mocked_groq():
         # Clean up
         os.remove(TEST_OUTPUT_PATH)
 
-
+@patch.dict(os.environ, {"GROQ_API_KEY": "mocked-api-key"})
 def test_process_images_with_real_images():
     custom_prompt = "Real test prompt"
     model = "real-test-model"
@@ -92,6 +92,7 @@ def test_process_images_missing_api_key():
         with pytest.raises(ValueError, match="GROQ_API_KEY is not set in the .env file"):
             process_images([TEST_IMAGE_PATH], TEST_OUTPUT_PATH, custom_prompt, model)
 
+@patch.dict(os.environ, {"GROQ_API_KEY": "mocked-api-key"})
 def test_process_images_invalid_image_path():
     custom_prompt = "Invalid Image Path Test"
     model = "test-model"
