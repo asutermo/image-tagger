@@ -46,7 +46,11 @@ def prompt_groq(client: GroqTaggingClient, custom_prompt: str, image_url: str) -
 
 
 def process_images(inputs: List[str], output: str, custom_prompt: str, model: str):
-    client = GroqTaggingClient(api_key=config["GROQ_API_KEY"], model=model)
+    api_key = config.get("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("GROQ_API_KEY is not set in the .env file")
+
+    client = GroqTaggingClient(api_key=api_key, model=model)
 
     out_json = {}
     for path in inputs:
